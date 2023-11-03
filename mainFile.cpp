@@ -1,11 +1,11 @@
 
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
-#include <iomanip> // Include the iomanip header to use setprecision
-#include <iomanip> // Include the iomanip header to use setw, setfill, and setprecision
-
+#include <iomanip>
+#include <ctime>
 using namespace std;
 
 // Define the structure for an order
@@ -39,7 +39,14 @@ void generateReceipt(const Order &order)
         outFile << "Quantity: " << order.quantity << endl;
         outFile << "Price per unit: $" << order.price << endl;
         outFile << "Total Cost: $" << calculateTotalCost(order) << endl;
-        outFile << "Date: " << order.date << endl;
+
+        // Get the current date and time
+        std::time_t currentTime = std::time(0);
+        std::tm* now = std::localtime(&currentTime);
+        char buffer[80]; // Buffer to store the formatted date and time
+        std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", now);
+        outFile << "Date: " << buffer << endl; // Print the formatted date and time
+
         outFile << "---------------------------\n";
         outFile << "***************************\n";
         outFile << "---------------------------\n";
@@ -95,8 +102,6 @@ struct MenuItem
     double price;
 };
 
-
-
 void displayMenu(const std::vector<MenuItem> &menu)
 {
     // Print the header
@@ -109,14 +114,13 @@ void displayMenu(const std::vector<MenuItem> &menu)
     {
         cout << left << setw(30) << item.name << "$" << fixed << setprecision(2) << item.price << endl;
     }
-};
+}
 
 int main()
 {
     int orderNumber = 1;
     vector<Order> orders;
-    double totalSales = retrieveTotalSales(); 
-    
+    double totalSales = retrieveTotalSales();
 
     // Define a vector of menu items
     std::vector<MenuItem> menu = {
@@ -130,7 +134,8 @@ int main()
     displayMenu(menu);
 
     while (true)
-    {   displayMenu(menu);
+    {
+        displayMenu(menu);
         cout << "Enter customer name (or 'q' to quit): \n";
         string customerName;
         cin >> customerName;
@@ -149,11 +154,13 @@ int main()
         cin >> order.quantity;
         cout << "Enter price per unit: ";
         cin >> order.price;
-        cout << "Date:";
-        cin >> order.date;
 
-        // Get the current date (you may need to implement this)
-        // order.date = "2023-10-24";  // Change this to the actual date
+        // Get the current date and time
+        std::time_t currentTime = std::time(0);
+        std::tm* now = std::localtime(&currentTime);
+        char buffer[80]; // Buffer to store the formatted date and time
+        std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", now);
+        order.date = buffer; // Store the formatted date and time in the order structure
 
         generateReceipt(order);
         orders.push_back(order);
@@ -166,3 +173,4 @@ int main()
 
     return 0;
 }
+
