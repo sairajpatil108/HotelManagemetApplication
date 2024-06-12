@@ -1,2 +1,2 @@
 # HotelManagemetApplication
-Hotel management application using C++ and Qt framework.
+terminal based Hotel management application using C++.
